@@ -1,0 +1,51 @@
+{
+  "name": "pi-tool-intent",
+  "version": "0.1.0",
+  "description": "Pi extension that requires intent and rationale provenance for write, edit, and bash tool calls.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cgint/pi-tool-intent.git"
+  },
+  "author": "cgint",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "pi-package",
+    "pi",
+    "coding-agent",
+    "extension",
+    "intent",
+    "provenance"
+  ],
+  "license": "MIT",
+  "files": [
+    "index.ts",
+    "src",
+    "tool-descriptions",
+    "README.md",
+    "LICENSE"
+  ],
+  "pi": {
+    "extensions": [
+      "./index.ts"
+    ]
+  },
+  "dependencies": {},
+  "peerDependencies": {
+    "@earendil-works/pi-ai": ">=0.74.0",
+    "@earendil-works/pi-coding-agent": ">=0.74.0",
+    "@earendil-works/pi-tui": "*",
+    "@sinclair/typebox": "*"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "@earendil-works/pi-coding-agent": "^0.74.0",
+    "@types/node": "^22.0.0",
+    "ajv": "^8.20.0",
+    "vitest": "^3.0.0"
+  }
+}
