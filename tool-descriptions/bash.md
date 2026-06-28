@@ -1,23 +1,21 @@
 Execute a shell command in the project directory.
 
-Every bash call must include concise provenance:
+Every call MUST include both `intent` and `rationale` fields. Missing either field causes tool rejection.
+
 ```json
 {
   "command": "npm test",
-  "intent": "Verify that existing functionality is not broken by recent changes.",
-  "rationale": "The feature touched test-heavy modules; regression check is necessary before commit."
+  "intent": "One sentence: what is this command trying to achieve? (not a restatement of the command)",
+  "rationale": "One sentence: why is it needed? (user req, evidence, constraint)"
 }
 ```
+
 - `command` — Shell command to execute.
-- `intent` — Required concise statement of the semantic goal this command serves. Do not merely restate the command.
-- `rationale` — Required concise justification for this command, focusing on user requirements, evidence, constraints, or assumptions not obvious from the command.
+- `intent` — MANDATORY. 1-sentence semantic goal. Omission = rejection.
+- `rationale` — MANDATORY. 1-sentence justification. Omission = rejection.
 - `timeout` — (optional) Timeout in milliseconds.
 
 Example:
 ```json
-{ "command": "npm test", "intent": "Verify that existing functionality is not broken by recent changes.", "rationale": "The feature touched test-heavy modules; regression check is necessary before commit." }
+{ "command": "npm test", "intent": "Verify no regressions before commit.", "rationale": "The feature touched test-heavy modules." }
 ```
-
-Rules:
-- Do not omit intent or rationale; metadata strings must not be empty.
-- For non-destructive commands (list files, grep, run tests), always provide intent and rationale.

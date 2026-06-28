@@ -24,11 +24,11 @@ export const writeToolSchema = Type.Object(
     }),
     intent: Type.String({
       minLength: 1,
-      description: "Required concise semantic goal this write serves; do not merely restate that the file is being written.",
+      description: "MANDATORY. Concise semantic goal this write serves. Omission will cause tool rejection.",
     }),
     rationale: Type.String({
       minLength: 1,
-      description: "Required concise justification for this write, focusing on user requirements, evidence, constraints, or assumptions not obvious from the content.",
+      description: "MANDATORY. Concise justification for this write. Omission will cause tool rejection.",
     }),
   },
   { additionalProperties: false },
@@ -67,7 +67,7 @@ function formatWriteProvenance(
     return undefined;
   }
 
-  const lines = [`${theme.bold("Write provenance")}`];
+  const lines: string[] = [];
   if (intent !== undefined) lines.push(`  Intent: ${intent}`);
   if (rationale !== undefined) lines.push(`  Rationale: ${rationale}`);
 

@@ -24,11 +24,11 @@ export const bashToolSchema = Type.Object(
     })),
     intent: Type.String({
       minLength: 1,
-      description: "Required concise semantic goal this command serves; do not merely restate the literal command.",
+      description: "MANDATORY. Concise semantic goal this command serves. Omission will cause tool rejection.",
     }),
     rationale: Type.String({
       minLength: 1,
-      description: "Required concise justification for this command, focusing on user requirements, evidence, constraints, or assumptions not obvious from the command itself.",
+      description: "MANDATORY. Concise justification for this command. Omission will cause tool rejection.",
     }),
   },
   { additionalProperties: false },
@@ -70,7 +70,7 @@ function formatBashProvenance(
     return undefined;
   }
 
-  const lines = [`${theme.bold("Bash provenance")}`];
+  const lines: string[] = [];
   if (intent !== undefined) lines.push(`  Intent: ${intent}`);
   if (rationale !== undefined) lines.push(`  Rationale: ${rationale}`);
 

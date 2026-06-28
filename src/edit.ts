@@ -23,11 +23,11 @@ function makeEditEntrySchema() {
       newText: Type.String({ description: "Replacement text for this targeted edit." }),
       intent: Type.String({
         minLength: 1,
-        description: "Required concise semantic goal this edit serves; do not merely restate the literal line change.",
+        description: "MANDATORY. Concise semantic goal this edit serves. Omission will cause tool rejection.",
       }),
       rationale: Type.String({
         minLength: 1,
-        description: "Required concise justification for this edit, focusing on user requirements, evidence, constraints, or assumptions not obvious from the diff.",
+        description: "MANDATORY. Concise justification for this edit. Omission will cause tool rejection.",
       }),
     },
     { additionalProperties: false },
