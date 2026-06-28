@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
+import { Value } from "@sinclair/typebox/value";
 import { assertBashRequest } from "../../src/bash";
 import { assertEditRequest } from "../../src/edit";
 import { assertWriteRequest } from "../../src/write";
+import { editToolSchema } from "../../src/edit";
 
 describe("assertWriteRequest", () => {
   it("passes for valid write request", () => {
@@ -15,6 +17,34 @@ describe("assertWriteRequest", () => {
 
   it("rejects empty path", () => {
     expect(() => assertWriteRequest({ path: "", content: "bar" })).toThrow();
+  });
+});
+
+describe("editToolSchema top-level optional provenance", () => {
+  const validEdits = [{ oldText: "a", newText: "b", intent: "change", rationale: "because" }];
+
+  it("accepts edit call without top-level intent/rationale", () => {
+    const result = Value.Check(editToolSchema, { path: "foo.ts", edits: validEdits });
+    expect(result).toBe(true);
+  });
+
+  it("accepts edit call with top-level intent/rationale", () => {
+    const result = Value.Check(editToolSchema, {
+      path: "foo.ts",
+      edits: validEdits,
+      intent: "update file",
+      rationale: "fix bug",
+    });
+    expect(result).toBe(true);
+  });
+
+  it("rejects edit call with unknown top-level field", () => {
+    const result = Value.Check(editToolSchema, {
+      path: "foo.ts",
+      edits: validEdits,
+      unknown: "nope",
+    });
+    expect(result).toBe(false);
   });
 });
 

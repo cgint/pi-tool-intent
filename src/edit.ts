@@ -44,6 +44,12 @@ export const editToolSchema = Type.Object(
       description:
         "One or more targeted replacements. Each edit is matched against the original file. Do not include overlapping or nested edits.",
     }),
+    intent: Type.Optional(Type.String({
+      description: "Optional concise semantic goal this edit call serves.",
+    })),
+    rationale: Type.Optional(Type.String({
+      description: "Optional concise justification for this edit call.",
+    })),
   },
   { additionalProperties: false },
 );
@@ -148,7 +154,7 @@ const editToolDefinition: EditToolDefinition = {
   async execute(toolCallId, params, signal, onUpdate, ctx) {
     assertEditRequest(params);
     const builtinEdit = createEditTool(ctx.cwd);
-    // Strip intent/rationale, pass only what the built-in tool expects
+    // Strip top-level intent/rationale (optional) and per-edit intent/rationale
     const baseEdits = params.edits.map((e) => ({ oldText: e.oldText, newText: e.newText }));
     return builtinEdit.execute(
       toolCallId,
