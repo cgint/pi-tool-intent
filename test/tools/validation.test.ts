@@ -100,12 +100,7 @@ describe("assertBashRequest", () => {
   });
 });
 
-describe("readToolSchema optional provenance", () => {
-  it("accepts read without intent/rationale", () => {
-    const result = Value.Check(readToolSchema, { path: "foo.ts" });
-    expect(result).toBe(true);
-  });
-
+describe("readToolSchema mandatory provenance", () => {
   it("accepts read with intent and rationale", () => {
     const result = Value.Check(readToolSchema, {
       path: "foo.ts",
@@ -113,6 +108,11 @@ describe("readToolSchema optional provenance", () => {
       rationale: "need pattern match",
     });
     expect(result).toBe(true);
+  });
+
+  it("rejects read without intent/rationale", () => {
+    const result = Value.Check(readToolSchema, { path: "foo.ts" });
+    expect(result).toBe(false);
   });
 
   it("rejects read with unknown field", () => {

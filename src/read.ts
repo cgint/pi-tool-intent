@@ -26,12 +26,14 @@ function makeReadSchema() {
       limit: Type.Optional(Type.Number({
         description: "Maximum number of lines to read",
       })),
-      intent: Type.Optional(Type.String({
-        description: "Optional concise semantic goal this read serves. Include when investigating.",
-      })),
-      rationale: Type.Optional(Type.String({
-        description: "Optional concise justification for this read. Include when investigating.",
-      })),
+      intent: Type.String({
+        minLength: 1,
+        description: "MANDATORY. Concise semantic goal this read serves. Omission will cause tool rejection.",
+      }),
+      rationale: Type.String({
+        minLength: 1,
+        description: "MANDATORY. Concise justification for this read. Omission will cause tool rejection.",
+      }),
     },
     { additionalProperties: false },
   );
@@ -43,33 +45,11 @@ type ReadRequestParams = {
   path: string;
   offset?: number;
   limit?: number;
-  intent?: string;
-  rationale?: string;
+  intent: string;
+  rationale: string;
 };
 
-/**
- * Runtime state: when true, calls without intent/rationale are rejected.
- * Toggled via /pi-tool-intent-read on|off.
- */
-let readIntentEnabled = false;
 
-export function setReadIntentEnabled(value: boolean): void {
-  readIntentEnabled = value;
-}
-
-export function getReadIntentEnabled(): boolean {
-  return readIntentEnabled;
-}
-
-function assertReadIntent(args: Partial<ReadRequestParams>): void {
-  if (!readIntentEnabled) return;
-  if (typeof args.intent !== "string" || args.intent.length === 0) {
-    throw new Error('read call requires "intent" when read-intent mode is enabled.');
-  }
-  if (typeof args.rationale !== "string" || args.rationale.length === 0) {
-    throw new Error('read call requires "rationale" when read-intent mode is enabled.');
-  }
-}
 
 function formatReadProvenance(
   args: Partial<ReadRequestParams> | undefined,
@@ -131,7 +111,6 @@ export function createReadToolDefinitionWithIntent(cwd: string): ToolDefinition<
     },
 
     async execute(toolCallId, params, signal, onUpdate, ctx) {
-      assertReadIntent(params);
       // Strip intent/rationale before delegating to the built-in read tool.
       const { intent: _intent, rationale: _rationale, ...baseParams } = params;
       return builtin.execute(
