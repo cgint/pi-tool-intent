@@ -1,6 +1,6 @@
 # pi-tool-intent
 
-Pi extension that requires **intent** and **rationale** provenance fields on `write`, `edit`, and `bash` tool calls. Optionally adds intent/rationale to `read` for reasoning disclosure.
+Pi extension that requires **intent** and **rationale** provenance fields on `write`, `edit`, `bash`, and `read` tool calls.
 
 ## Motivation
 
@@ -12,7 +12,7 @@ Built-in `write`, `edit`, and `bash` tools accept structural parameters (path, c
 
 ## How It Works
 
-This extension **shadows** the built-in `write`, `edit`, `bash`, and optionally `read` tools with drop-in replacements that add `intent` and `rationale` fields:
+This extension **shadows** the built-in `write`, `edit`, `bash`, and `read` tools with drop-in replacements that add `intent` and `rationale` fields:
 
 | Field | Description |
 |---|---|
@@ -63,20 +63,9 @@ npm link  # from this directory
 
 Then enable in your pi configuration. The extension registers tools with the exact names `write`, `edit`, `bash`, and `read`, so they automatically shadow the built-ins.
 
-## Read tool (reasoning probe)
+## Read tool
 
-The `read` tool shadows the built-in with optional `intent` and `rationale` fields. By default these are optional — the model can include them to expose its investigative reasoning.
-
-Toggle strict mode (required intent/rationale) with:
-
-```
-/pi-tool-intent-read on   # requires intent + rationale on every read
-/pi-tool-intent-read off  # optional (default)
-```
-
-This lets you observe the model's search strategy without forcing it on every read call.
-
-## Schema Changes
+The `read` tool shadows the built-in with mandatory `intent` and `rationale` fields, consistent with `write`, `edit`, and `bash`.
 
 The extended schemas add `intent: string` and `rationale: string` (both `minLength: 1`). If either field is missing or empty, the call is rejected with a validation error.
 
@@ -97,10 +86,8 @@ The extended schemas add `intent: string` and `rationale: string` (both `minLeng
 
 ### read
 ```
-{ path: string, offset?: number, limit?: number, intent?: string, rationale?: string }
+{ path: string, offset?: number, limit?: number, intent: string, rationale: string }
 ```
-
-Intent and rationale are optional by default. Use `/pi-tool-intent-read on` to require them.
 
 ## Design Notes
 
