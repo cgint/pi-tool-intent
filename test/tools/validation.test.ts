@@ -4,6 +4,7 @@ import { assertBashRequest } from "../../src/bash";
 import { assertEditRequest } from "../../src/edit";
 import { assertWriteRequest } from "../../src/write";
 import { editToolSchema } from "../../src/edit";
+import { readToolSchema } from "../../src/read";
 
 describe("assertWriteRequest", () => {
   it("passes for valid write request", () => {
@@ -96,5 +97,29 @@ describe("assertBashRequest", () => {
 
   it("rejects missing rationale", () => {
     expect(() => assertBashRequest({ command: "ls", intent: "list" })).toThrow();
+  });
+});
+
+describe("readToolSchema optional provenance", () => {
+  it("accepts read without intent/rationale", () => {
+    const result = Value.Check(readToolSchema, { path: "foo.ts" });
+    expect(result).toBe(true);
+  });
+
+  it("accepts read with intent and rationale", () => {
+    const result = Value.Check(readToolSchema, {
+      path: "foo.ts",
+      intent: "checking auth",
+      rationale: "need pattern match",
+    });
+    expect(result).toBe(true);
+  });
+
+  it("rejects read with unknown field", () => {
+    const result = Value.Check(readToolSchema, {
+      path: "foo.ts",
+      unknown: "nope",
+    });
+    expect(result).toBe(false);
   });
 });
