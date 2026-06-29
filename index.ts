@@ -4,7 +4,7 @@ import { registerBashTool } from "./src/bash";
 import { registerWriteTool } from "./src/write";
 import { registerReadTool, setReadIntentEnabled, getReadIntentEnabled } from "./src/read";
 
-const COMMAND_NAME = "/pi-tool-intent-read";
+const COMMAND_NAME = "pi-tool-intent-read";
 
 export default function register(pi: ExtensionAPI): void {
   // Always register the core intent tools
