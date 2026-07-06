@@ -1,6 +1,7 @@
-import { Text } from "@earendil-works/pi-tui";
+import { type ThemeColor } from "@earendil-works/pi-coding-agent";
 import type { ExtensionAPI, ToolDefinition } from "@earendil-works/pi-coding-agent";
 import { createBashTool } from "@earendil-works/pi-coding-agent";
+import { Text } from "@earendil-works/pi-tui";
 import { Type } from "@sinclair/typebox";
 import { readFileSync } from "fs";
 
@@ -59,7 +60,7 @@ export function assertBashRequest(request: unknown): asserts request is BashRequ
 
 function formatBashProvenance(
   args: Partial<BashRequestParams> | undefined,
-  theme: { bold: (text: string) => string; fg: (token: string, text: string) => string },
+  theme: { bold: (text: string) => string; fg: (color: ThemeColor, text: string) => string },
 ): string | undefined {
   if (!args) return undefined;
 
@@ -79,7 +80,7 @@ function formatBashProvenance(
 
 function formatBashCall(
   args: Partial<BashRequestParams> | undefined,
-  theme: { bold: (text: string) => string; fg: (token: string, text: string) => string },
+  theme: { bold: (text: string) => string; fg: (color: ThemeColor, text: string) => string },
 ): string {
   const command = args?.command;
   const cmdDisplay = typeof command === "string" && command.length > 0

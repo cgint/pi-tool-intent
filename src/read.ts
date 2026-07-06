@@ -1,4 +1,5 @@
 import { Text } from "@earendil-works/pi-tui";
+import { type ThemeColor } from "@earendil-works/pi-coding-agent";
 import type { ExtensionAPI, ToolDefinition } from "@earendil-works/pi-coding-agent";
 import { createReadToolDefinition } from "@earendil-works/pi-coding-agent";
 import { Type } from "@sinclair/typebox";
@@ -53,7 +54,7 @@ type ReadRequestParams = {
 
 function formatReadProvenance(
   args: Partial<ReadRequestParams> | undefined,
-  theme: { bold: (text: string) => string; fg: (token: string, text: string) => string },
+  theme: { bold: (text: string) => string; fg: (color: ThemeColor, text: string) => string },
 ): string | undefined {
   if (!args) return undefined;
 
@@ -73,7 +74,7 @@ function formatReadProvenance(
 
 function formatReadCall(
   args: Partial<ReadRequestParams> | undefined,
-  theme: { bold: (text: string) => string; fg: (token: string, text: string) => string },
+  theme: { bold: (text: string) => string; fg: (color: ThemeColor, text: string) => string },
 ): string {
   const path = args?.path;
   const pathDisplay =

@@ -40,7 +40,8 @@
   },
   "scripts": {
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "precommit": "tsc --noEmit && npm run test"
   },
   "devDependencies": {
     "@earendil-works/pi-coding-agent": "^0.74.0",

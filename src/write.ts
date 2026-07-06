@@ -1,4 +1,5 @@
 import { Text } from "@earendil-works/pi-tui";
+import { type ThemeColor } from "@earendil-works/pi-coding-agent";
 import type { ExtensionAPI, ToolDefinition } from "@earendil-works/pi-coding-agent";
 import { createWriteTool } from "@earendil-works/pi-coding-agent";
 import { Type } from "@sinclair/typebox";
@@ -56,7 +57,7 @@ export function assertWriteRequest(request: unknown): asserts request is WriteRe
 
 function formatWriteProvenance(
   args: Partial<WriteRequestParams> | undefined,
-  theme: { bold: (text: string) => string; fg: (token: string, text: string) => string },
+  theme: { bold: (text: string) => string; fg: (color: ThemeColor, text: string) => string },
 ): string | undefined {
   if (!args) return undefined;
 
@@ -76,7 +77,7 @@ function formatWriteProvenance(
 
 function formatWriteCall(
   args: Partial<WriteRequestParams> | undefined,
-  theme: { bold: (text: string) => string; fg: (token: string, text: string) => string },
+  theme: { bold: (text: string) => string; fg: (color: ThemeColor, text: string) => string },
 ): string {
   const path = args?.path;
   const pathDisplay =
