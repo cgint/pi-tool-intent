@@ -31,7 +31,6 @@
       "./index.ts"
     ]
   },
-  "dependencies": {},
   "peerDependencies": {
     "@earendil-works/pi-ai": ">=0.74.0",
     "@earendil-works/pi-coding-agent": ">=0.74.0",
@@ -44,9 +43,12 @@
     "precommit": "tsc --noEmit && npm run test && npm audit --audit-level=moderate"
   },
   "devDependencies": {
-    "@earendil-works/pi-coding-agent": "^0.80.3",
-    "@types/node": "^22.0.0",
+    "@earendil-works/pi-ai": "^0.80.10",
+    "@earendil-works/pi-coding-agent": "^0.80.10",
+    "@earendil-works/pi-tui": "^0.80.10",
+    "@sinclair/typebox": "^0.34.52",
+    "@types/node": "^26.1.1",
     "ajv": "^8.20.0",
-    "vitest": "^3.0.0"
+    "vitest": "^4.1.10"
   }
 }
