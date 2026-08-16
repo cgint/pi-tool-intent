@@ -42,13 +42,19 @@
     "test:watch": "vitest",
     "precommit": "tsc --noEmit && npm run test && npm audit --audit-level=moderate"
   },
+  "overrides": {
+    "fast-uri": "3.1.5",
+    "nanoid": "3.3.18",
+    "postcss": "8.5.26"
+  },
   "devDependencies": {
-    "@earendil-works/pi-ai": "^0.80.10",
-    "@earendil-works/pi-coding-agent": "^0.80.10",
-    "@earendil-works/pi-tui": "^0.80.10",
+    "@earendil-works/pi-ai": "^0.84.2",
+    "@earendil-works/pi-coding-agent": "^0.84.2",
+    "@earendil-works/pi-tui": "^0.84.2",
     "@sinclair/typebox": "^0.34.52",
-    "@types/node": "^26.1.1",
+    "@types/node": "^26.2.0",
     "ajv": "^8.20.0",
+    "typescript": "^7.0.2",
     "vitest": "^4.1.10"
   }
 }
