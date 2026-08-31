@@ -19,17 +19,9 @@ function makeEditEntrySchema() {
   return Type.Object(
     {
       oldText: Type.String({
-        description: "Exact text for one targeted replacement. It must be unique in the original file.",
+        description: "Exact text to find and replace. Must be unique in the original file.",
       }),
       newText: Type.String({ description: "Replacement text for this targeted edit." }),
-      intent: Type.String({
-        minLength: 1,
-        description: "MANDATORY. Concise semantic goal this edit serves. Omission will cause tool rejection.",
-      }),
-      rationale: Type.String({
-        minLength: 1,
-        description: "MANDATORY. Concise justification for this edit. Omission will cause tool rejection.",
-      }),
     },
     { additionalProperties: false },
   );
@@ -45,11 +37,13 @@ export const editToolSchema = Type.Object(
       description:
         "One or more targeted replacements. Each edit is matched against the original file. Do not include overlapping or nested edits.",
     }),
-    intent: Type.Optional(Type.String({
-      description: "Optional concise semantic goal this edit call serves.",
-    })),
+    intent: Type.String({
+      minLength: 1,
+      description: "MANDATORY. Concise semantic goal this edit call serves. Omission will cause tool rejection.",
+    }),
     rationale: Type.Optional(Type.String({
-      description: "Optional concise justification for this edit call.",
+      minLength: 1,
+      description: "Optional. One-sentence pointer to the evidence/source that triggered this edit (e.g. a user request, a spec section, a failing test). Omit when the trigger is the immediately preceding context.",
     })),
   },
   { additionalProperties: false },
@@ -58,13 +52,13 @@ export const editToolSchema = Type.Object(
 type EditEntry = {
   oldText: string;
   newText: string;
-  intent: string;
-  rationale: string;
 };
 
 type EditRequestParams = {
   path: string;
   edits: EditEntry[];
+  intent: string;
+  rationale?: string;
 };
 
 export function assertEditRequest(request: unknown): asserts request is EditRequestParams {
@@ -90,29 +84,33 @@ export function assertEditRequest(request: unknown): asserts request is EditRequ
     if (typeof e.newText !== "string") {
       throw new Error(`Edit ${i} requires a "newText" string.`);
     }
-    if (typeof e.intent !== "string" || e.intent.length === 0) {
-      throw new Error(`Edit ${i} requires a non-empty "intent" string.`);
-    }
-    if (typeof e.rationale !== "string" || e.rationale.length === 0) {
-      throw new Error(`Edit ${i} requires a non-empty "rationale" string.`);
-    }
+  }
+  if (typeof candidate.intent !== "string" || candidate.intent.length === 0) {
+    throw new Error('Edit request requires a non-empty "intent" string.');
+  }
+  if (candidate.rationale !== undefined && (typeof candidate.rationale !== "string" || candidate.rationale.length === 0)) {
+    throw new Error('Edit request "rationale" must be a non-empty string when provided.');
   }
 }
 
 function formatEditProvenance(
-  edits: EditEntry[] | undefined,
+  args: Partial<EditRequestParams> | undefined,
   theme: { bold: (text: string) => string; fg: (color: ThemeColor, text: string) => string },
 ): string | undefined {
-  if (!Array.isArray(edits) || edits.length === 0) return undefined;
+  if (!args) return undefined;
 
-  const blocks = edits.map((edit, index) => {
-    const lines = [`${theme.bold(`Edit ${index + 1}`)}`];
-    if (edit.intent) lines.push(`  Intent: ${edit.intent}`);
-    if (edit.rationale) lines.push(`  Rationale: ${edit.rationale}`);
-    return lines.join("\n");
-  });
+  const intent = typeof args.intent === "string" ? args.intent : undefined;
+  const rationale = typeof args.rationale === "string" ? args.rationale : undefined;
 
-  return `${theme.fg("toolOutput", theme.bold("Edit provenance:"))}\n${blocks.join("\n")}\n--------------`;
+  if (intent === undefined && rationale === undefined) {
+    return undefined;
+  }
+
+  const lines: string[] = [];
+  if (intent !== undefined) lines.push(`  Intent: ${intent}`);
+  if (rationale !== undefined) lines.push(`  Rationale: ${rationale}`);
+
+  return `${theme.fg("toolOutput", theme.bold("Edit provenance:"))}\n${lines.join("\n")}\n--------------`;
 }
 
 function formatEditCall(
@@ -126,7 +124,7 @@ function formatEditCall(
       : theme.fg("toolOutput", "...");
   let text = `${theme.fg("toolTitle", theme.bold("edit"))} ${pathDisplay}`;
 
-  const provenance = formatEditProvenance(args?.edits as EditEntry[] | undefined, theme);
+  const provenance = formatEditProvenance(args, theme);
   if (provenance) {
     text += `\n\n${provenance}`;
   }
@@ -155,11 +153,9 @@ const editToolDefinition: EditToolDefinition = {
   async execute(toolCallId, params, signal, onUpdate, ctx) {
     assertEditRequest(params);
     const builtinEdit = createEditTool(ctx.cwd);
-    // Strip top-level intent/rationale (optional) and per-edit intent/rationale
-    const baseEdits = params.edits.map((e) => ({ oldText: e.oldText, newText: e.newText }));
     return builtinEdit.execute(
       toolCallId,
-      { path: params.path, edits: baseEdits },
+      { path: params.path, edits: params.edits },
       signal,
       onUpdate,
     );

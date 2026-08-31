@@ -3,6 +3,14 @@ import { Value } from "@sinclair/typebox/value";
 import { readToolSchema } from "../../src/read";
 
 describe("readToolSchema", () => {
+  it("accepts read call with path and intent only (rationale optional)", () => {
+    const result = Value.Check(readToolSchema, {
+      path: "foo.ts",
+      intent: "checking auth",
+    });
+    expect(result).toBe(true);
+  });
+
   it("accepts read call with path, intent, and rationale", () => {
     const result = Value.Check(readToolSchema, {
       path: "foo.ts",
@@ -16,7 +24,6 @@ describe("readToolSchema", () => {
     const result = Value.Check(readToolSchema, {
       path: "foo.ts",
       intent: "checking auth",
-      rationale: "need to match pattern",
       offset: 10,
       limit: 20,
     });
@@ -27,14 +34,6 @@ describe("readToolSchema", () => {
     const result = Value.Check(readToolSchema, {
       path: "foo.ts",
       rationale: "need to match pattern",
-    });
-    expect(result).toBe(false);
-  });
-
-  it("rejects read call without rationale", () => {
-    const result = Value.Check(readToolSchema, {
-      path: "foo.ts",
-      intent: "checking auth",
     });
     expect(result).toBe(false);
   });

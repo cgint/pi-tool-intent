@@ -5,7 +5,7 @@ import { registerWriteTool } from "./src/write";
 import { registerReadTool } from "./src/read";
 
 export default function register(pi: ExtensionAPI): void {
-  // Always register the core intent tools — intent/rationale are mandatory on all of them
+  // Always register the core intent tools — intent is mandatory; rationale is optional on all of them
   registerWriteTool(pi);
   registerEditTool(pi);
   registerBashTool(pi);

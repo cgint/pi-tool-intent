@@ -1,1 +1,1 @@
-Read file contents. Optional intent and rationale fields for reasoning disclosure.
+Read a file. `intent` is required; `rationale` is optional (one-sentence pointer to the triggering evidence/source).

@@ -27,10 +27,10 @@ export const writeToolSchema = Type.Object(
       minLength: 1,
       description: "MANDATORY. Concise semantic goal this write serves. Omission will cause tool rejection.",
     }),
-    rationale: Type.String({
+    rationale: Type.Optional(Type.String({
       minLength: 1,
-      description: "MANDATORY. Concise justification for this write. Omission will cause tool rejection.",
-    }),
+      description: "Optional. One-sentence pointer to the evidence/source that triggered this write (e.g. a user request, a spec section, a failing test). Omit when the trigger is the immediately preceding context.",
+    })),
   },
   { additionalProperties: false },
 );
@@ -39,7 +39,7 @@ type WriteRequestParams = {
   path: string;
   content: string;
   intent: string;
-  rationale: string;
+  rationale?: string;
 };
 
 export function assertWriteRequest(request: unknown): asserts request is WriteRequestParams {
@@ -52,6 +52,12 @@ export function assertWriteRequest(request: unknown): asserts request is WriteRe
   }
   if (typeof candidate.content !== "string") {
     throw new Error('Write request requires a "content" string.');
+  }
+  if (typeof candidate.intent !== "string" || candidate.intent.length === 0) {
+    throw new Error('Write request requires a non-empty "intent" string.');
+  }
+  if (candidate.rationale !== undefined && (typeof candidate.rationale !== "string" || candidate.rationale.length === 0)) {
+    throw new Error('Write request "rationale" must be a non-empty string when provided.');
   }
 }
 

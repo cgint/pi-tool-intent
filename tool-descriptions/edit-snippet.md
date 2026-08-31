@@ -1,1 +1,1 @@
-Edit a text file by replacing exact text blocks. Each edit entry requires `intent` and `rationale` provenance fields explaining the semantic goal and justification.
+Edit a text file by replacing exact text blocks. `intent` is required; `rationale` is optional (one-sentence pointer to the triggering evidence/source).

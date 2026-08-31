@@ -1,1 +1,1 @@
-Write content to a file. Creates the file if it doesn't exist, overwrites if it does. Requires intent and rationale provenance fields.
+Write a file. `intent` is required; `rationale` is optional (one-sentence pointer to the triggering evidence/source).

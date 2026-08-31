@@ -27,10 +27,10 @@ export const bashToolSchema = Type.Object(
       minLength: 1,
       description: "MANDATORY. Concise semantic goal this command serves. Omission will cause tool rejection.",
     }),
-    rationale: Type.String({
+    rationale: Type.Optional(Type.String({
       minLength: 1,
-      description: "MANDATORY. Concise justification for this command. Omission will cause tool rejection.",
-    }),
+      description: "Optional. One-sentence pointer to the evidence/source that triggered this command (e.g. a failing test, a spec section, a file:line, or the user's request). Omit when the trigger is the immediately preceding context.",
+    })),
   },
   { additionalProperties: false },
 );
@@ -39,7 +39,7 @@ type BashRequestParams = {
   command: string;
   timeout?: number;
   intent: string;
-  rationale: string;
+  rationale?: string;
 };
 
 export function assertBashRequest(request: unknown): asserts request is BashRequestParams {
@@ -53,8 +53,8 @@ export function assertBashRequest(request: unknown): asserts request is BashRequ
   if (typeof candidate.intent !== "string" || candidate.intent.length === 0) {
     throw new Error('Bash request requires a non-empty "intent" string.');
   }
-  if (typeof candidate.rationale !== "string" || candidate.rationale.length === 0) {
-    throw new Error('Bash request requires a non-empty "rationale" string.');
+  if (candidate.rationale !== undefined && (typeof candidate.rationale !== "string" || candidate.rationale.length === 0)) {
+    throw new Error('Bash request "rationale" must be a non-empty string when provided.');
   }
 }
 

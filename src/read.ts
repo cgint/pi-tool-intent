@@ -31,10 +31,10 @@ function makeReadSchema() {
         minLength: 1,
         description: "MANDATORY. Concise semantic goal this read serves. Omission will cause tool rejection.",
       }),
-      rationale: Type.String({
+      rationale: Type.Optional(Type.String({
         minLength: 1,
-        description: "MANDATORY. Concise justification for this read. Omission will cause tool rejection.",
-      }),
+        description: "Optional. One-sentence pointer to the evidence/source that triggered this read (e.g. a symbol found in another file, a user request, a spec section). Omit when the trigger is the immediately preceding context.",
+      })),
     },
     { additionalProperties: false },
   );
@@ -47,7 +47,7 @@ type ReadRequestParams = {
   offset?: number;
   limit?: number;
   intent: string;
-  rationale: string;
+  rationale?: string;
 };
 
 
