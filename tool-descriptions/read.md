@@ -3,5 +3,5 @@ Read the contents of a file. Supports text files and images (jpg, png, gif, webp
 - `path` — file to read (relative or absolute).
 - `offset` — (optional) Line number to start reading from (1-indexed).
 - `limit` — (optional) Maximum number of lines to read.
-- `intent` — MANDATORY. Concise semantic goal of this read. Omission will cause tool rejection.
+- `intent` — MANDATORY. Concise semantic goal. For investigation, name the claim/uncertainty being tested and the observation that would change the conclusion. Omission causes rejection.
 - `rationale` — Optional. One-sentence pointer to the evidence/source that triggered this read (e.g. a symbol found in another file, a user request, a spec section). Omit when the trigger is the immediately preceding context.

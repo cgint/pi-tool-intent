@@ -4,6 +4,7 @@ import type { ExtensionAPI, ToolDefinition } from "@earendil-works/pi-coding-age
 import { createEditTool } from "@earendil-works/pi-coding-agent";
 import { Type } from "@sinclair/typebox";
 import { readFileSync } from "fs";
+import { INVESTIGATIVE_INTENT_GUIDELINE } from "./prompt-guidelines";
 
 const EDIT_DESC = readFileSync(
   new URL("../tool-descriptions/edit.md", import.meta.url),
@@ -39,7 +40,7 @@ export const editToolSchema = Type.Object(
     }),
     intent: Type.String({
       minLength: 1,
-      description: "MANDATORY. Concise semantic goal this edit call serves. Omission will cause tool rejection.",
+      description: "MANDATORY. Concise semantic goal. For investigation, name the claim/uncertainty being tested and the observation that would change the conclusion. Omission causes rejection.",
     }),
     rationale: Type.Optional(Type.String({
       minLength: 1,
@@ -140,6 +141,7 @@ const editToolDefinition: EditToolDefinition = {
   description: EDIT_DESC,
   parameters: editToolSchema,
   promptSnippet: EDIT_PROMPT_SNIPPET,
+  promptGuidelines: [INVESTIGATIVE_INTENT_GUIDELINE],
   renderShell: "default",
 
   renderCall(args, theme, context) {

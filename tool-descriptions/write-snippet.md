@@ -1,1 +1,1 @@
-Write a file. `intent` is required; `rationale` is optional (one-sentence pointer to the triggering evidence/source).
+Write a file. `intent` is required; for investigation, state the claim/uncertainty being tested and the observation that would change the conclusion. `rationale` is optional (one-sentence pointer to the triggering evidence/source).

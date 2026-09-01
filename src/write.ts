@@ -4,6 +4,7 @@ import type { ExtensionAPI, ToolDefinition } from "@earendil-works/pi-coding-age
 import { createWriteTool } from "@earendil-works/pi-coding-agent";
 import { Type } from "@sinclair/typebox";
 import { readFileSync } from "fs";
+import { INVESTIGATIVE_INTENT_GUIDELINE } from "./prompt-guidelines";
 
 const WRITE_DESC = readFileSync(
   new URL("../tool-descriptions/write.md", import.meta.url),
@@ -25,7 +26,7 @@ export const writeToolSchema = Type.Object(
     }),
     intent: Type.String({
       minLength: 1,
-      description: "MANDATORY. Concise semantic goal this write serves. Omission will cause tool rejection.",
+      description: "MANDATORY. Concise semantic goal. For investigation, name the claim/uncertainty being tested and the observation that would change the conclusion. Omission causes rejection.",
     }),
     rationale: Type.Optional(Type.String({
       minLength: 1,
@@ -110,6 +111,7 @@ const writeToolDefinition: WriteToolDefinition = {
   description: WRITE_DESC,
   parameters: writeToolSchema,
   promptSnippet: WRITE_PROMPT_SNIPPET,
+  promptGuidelines: [INVESTIGATIVE_INTENT_GUIDELINE],
   renderShell: "default",
 
   renderCall(args, theme, context) {

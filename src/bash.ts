@@ -4,6 +4,7 @@ import { createBashTool } from "@earendil-works/pi-coding-agent";
 import { Text } from "@earendil-works/pi-tui";
 import { Type } from "@sinclair/typebox";
 import { readFileSync } from "fs";
+import { INVESTIGATIVE_INTENT_GUIDELINE } from "./prompt-guidelines";
 
 const BASH_DESC = readFileSync(
   new URL("../tool-descriptions/bash.md", import.meta.url),
@@ -25,7 +26,7 @@ export const bashToolSchema = Type.Object(
     })),
     intent: Type.String({
       minLength: 1,
-      description: "MANDATORY. Concise semantic goal this command serves. Omission will cause tool rejection.",
+      description: "MANDATORY. Concise semantic goal. For investigation, name the claim/uncertainty being tested and the observation that would change the conclusion. Omission causes rejection.",
     }),
     rationale: Type.Optional(Type.String({
       minLength: 1,
@@ -104,6 +105,7 @@ const bashToolDefinition: BashToolDefinition = {
   description: BASH_DESC,
   parameters: bashToolSchema,
   promptSnippet: BASH_PROMPT_SNIPPET,
+  promptGuidelines: [INVESTIGATIVE_INTENT_GUIDELINE],
   renderShell: "default",
 
   renderCall(args, theme, context) {

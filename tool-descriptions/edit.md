@@ -2,7 +2,7 @@ Edit a single file using exact text replacement. Every edits[].oldText must matc
 
 - `path` — file to edit.
 - `edits` — array of `{ oldText, newText }` replacement blocks.
-- `intent` — MANDATORY. Concise semantic goal this edit call serves. Omission will cause tool rejection.
+- `intent` — MANDATORY. Concise semantic goal. For investigation, name the claim/uncertainty being tested and the observation that would change the conclusion. Omission causes rejection.
 - `rationale` — Optional. One-sentence pointer to the evidence/source that triggered this edit (e.g. a user request, a spec section, a failing test). Omit when the trigger is the immediately preceding context.
 
 Rules:

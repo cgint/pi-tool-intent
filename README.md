@@ -50,7 +50,7 @@ This extension **shadows** the built-in `write`, `edit`, `bash`, and `read` tool
 
 | Field | Description |
 |---|---|
-| `intent` | **Mandatory.** Concise semantic goal this action serves (the destination). |
+| `intent` | **Mandatory.** Concise semantic goal. For investigation, name the claim/uncertainty being tested and the observation that would change the conclusion. |
 | `rationale` | **Optional.** One-sentence pointer to the evidence/source that triggered the action (a failing test, a spec section, a file:line, the user's request). Omit when the trigger is already the immediately preceding context. |
 
 Example `write` call:
@@ -83,6 +83,8 @@ Example `bash` call:
   "rationale": "The feature touched test-heavy modules; regression check required."
 }
 ```
+
+For investigative tool calls, state the claim or uncertainty being tested in `intent` and the observation that would change the conclusion; include the consequence when useful. Do not invent a result before observing it.
 
 Provenance lives at the **call level** only — `edit` entries carry no per-edit fields (per-edit provenance was the dominant rejection class in observed sessions and added little for live review).
 
