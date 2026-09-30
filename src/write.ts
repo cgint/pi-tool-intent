@@ -85,6 +85,7 @@ function formatWriteProvenance(
 function formatWriteCall(
   args: Partial<WriteRequestParams> | undefined,
   theme: { bold: (text: string) => string; fg: (color: ThemeColor, text: string) => string },
+  expanded: boolean,
 ): string {
   const path = args?.path;
   const pathDisplay =
@@ -92,10 +93,10 @@ function formatWriteCall(
       ? theme.fg("accent", path)
       : theme.fg("toolOutput", "...");
   const lineCount = typeof args?.content === "string" ? args.content.split("\n").length : 0;
-  const lineInfo = lineCount > 0 ? theme.fg("muted", ` (${lineCount} lines)`) : "";
+  const lineInfo = expanded && lineCount > 0 ? theme.fg("muted", ` (${lineCount} lines)`) : "";
   let text = `${theme.fg("toolTitle", theme.bold("write"))} ${pathDisplay}${lineInfo}`;
 
-  const provenance = formatWriteProvenance(args, theme);
+  const provenance = expanded ? formatWriteProvenance(args, theme) : undefined;
   if (provenance) {
     text += `\n\n${provenance}`;
   }
@@ -118,7 +119,7 @@ const writeToolDefinition: WriteToolDefinition = {
     const text = context.lastComponent instanceof Text
       ? context.lastComponent
       : new Text("", 0, 0);
-    text.setText(formatWriteCall(args, theme));
+    text.setText(formatWriteCall(args, theme, context.expanded));
     return text;
   },
 
