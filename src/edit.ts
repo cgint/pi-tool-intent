@@ -117,7 +117,6 @@ function formatEditProvenance(
 function formatEditCall(
   args: Partial<EditRequestParams> | undefined,
   theme: { bold: (text: string) => string; fg: (color: ThemeColor, text: string) => string },
-  expanded: boolean,
 ): string {
   const path = args?.path;
   const pathDisplay =
@@ -126,7 +125,7 @@ function formatEditCall(
       : theme.fg("toolOutput", "...");
   let text = `${theme.fg("toolTitle", theme.bold("edit"))} ${pathDisplay}`;
 
-  const provenance = expanded ? formatEditProvenance(args, theme) : undefined;
+  const provenance = formatEditProvenance(args, theme);
   if (provenance) {
     text += `\n\n${provenance}`;
   }
@@ -149,7 +148,7 @@ const editToolDefinition: EditToolDefinition = {
     const text = context.lastComponent instanceof Text
       ? context.lastComponent
       : new Text("", 0, 0);
-    text.setText(formatEditCall(args, theme, context.expanded));
+    text.setText(formatEditCall(args, theme));
     return text;
   },
 

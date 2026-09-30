@@ -82,7 +82,6 @@ function formatBashProvenance(
 function formatBashCall(
   args: Partial<BashRequestParams> | undefined,
   theme: { bold: (text: string) => string; fg: (color: ThemeColor, text: string) => string },
-  expanded: boolean,
 ): string {
   const command = args?.command;
   const cmdDisplay = typeof command === "string" && command.length > 0
@@ -90,7 +89,7 @@ function formatBashCall(
     : theme.fg("toolOutput", "...");
   let text = `${theme.fg("toolTitle", theme.bold("bash"))} ${cmdDisplay}`;
 
-  const provenance = expanded ? formatBashProvenance(args, theme) : undefined;
+  const provenance = formatBashProvenance(args, theme);
   if (provenance) {
     text += `\n\n${provenance}`;
   }
@@ -113,7 +112,7 @@ const bashToolDefinition: BashToolDefinition = {
     const text = context.lastComponent instanceof Text
       ? context.lastComponent
       : new Text("", 0, 0);
-    text.setText(formatBashCall(args, theme, context.expanded));
+    text.setText(formatBashCall(args, theme));
     return text;
   },
 

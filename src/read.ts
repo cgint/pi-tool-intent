@@ -76,7 +76,6 @@ function formatReadProvenance(
 function formatReadCall(
   args: Partial<ReadRequestParams> | undefined,
   theme: { bold: (text: string) => string; fg: (color: ThemeColor, text: string) => string },
-  expanded: boolean,
 ): string {
   const path = args?.path;
   const pathDisplay =
@@ -86,7 +85,7 @@ function formatReadCall(
 
   let text = `${theme.fg("toolTitle", theme.bold("read"))} ${pathDisplay}`;
 
-  const provenance = expanded ? formatReadProvenance(args, theme) : undefined;
+  const provenance = formatReadProvenance(args, theme);
   if (provenance) {
     text += `\n\n${provenance}`;
   }
@@ -110,7 +109,7 @@ export function createReadToolDefinitionWithIntent(cwd: string): ToolDefinition<
       const text = context.lastComponent instanceof Text
         ? context.lastComponent
         : new Text("", 0, 0);
-      text.setText(formatReadCall(args, theme, context.expanded));
+      text.setText(formatReadCall(args, theme));
       return text;
     },
 
