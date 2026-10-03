@@ -48,9 +48,9 @@
     "postcss": "8.5.28"
   },
   "devDependencies": {
-    "@earendil-works/pi-ai": "^0.99.1",
-    "@earendil-works/pi-coding-agent": "^0.99.1",
-    "@earendil-works/pi-tui": "^0.99.1",
+    "@earendil-works/pi-ai": "^1.0.0",
+    "@earendil-works/pi-coding-agent": "^1.0.0",
+    "@earendil-works/pi-tui": "^1.0.0",
     "@sinclair/typebox": "^0.34.52",
     "@types/node": "^26.6.3",
     "ajv": "^8.20.0",
